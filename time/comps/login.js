@@ -4,12 +4,13 @@
  * Outside source used to create button:
  * https://www.youtube.com/watch?v=B1fCdhQs6Eg
  * 
- * Author: Jude Gabriel
- * Date: February 2, 2022
+ * Author: Jude Gabriel (edited by Dylan Kramis)
+ * Date: February 2, 2022 (edited February 8, 2023)
  ************************************************/
 
 import React from 'react';
-import {Color} from './Palette.js';
+import { Color } from './Palette.js';
+import { style } from './Palette.js'
 import { Platform, Text, View, StyleSheet, TouchableOpacity, TextInput, Image, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView} from 'react-native'
 
 import Database from '../database-communication/database.js';
@@ -73,6 +74,7 @@ class Login extends React.Component {
                                 style={styles.textArea} 
                             // defaultValue='joey@gmail.com'
                                 placeholder='Email'
+                                placeholderTextColor='gray'// temporary fix, adjust in style sheet
                                 keyboardType='email-address'
                                 secureTextEntry={false}
                                 onChangeText={(text) => {
@@ -86,6 +88,7 @@ class Login extends React.Component {
                                 style={styles.textArea}  
                             // defaultValue='test'
                                 placeholder='Password'
+                                placeholderTextColor='gray'// temporary fix, adjust in style sheet
                                 secureTextEntry={true}
                                 onChangeText={(text) => {
                                     this.setState({password: text})
@@ -141,7 +144,8 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         borderColor: 'black',
         borderWidth: 1,
-        borderRadius: 15
+        borderRadius: 15,
+        placeholderTextColor: Color.PLACEHOLDER_TEXT,
     },
     errorText: {
         padding: 30
