@@ -1,6 +1,10 @@
 import * as firebase from 'firebase'
 import 'firebase/firestore' 
+<<<<<<< Updated upstream
 //import { validateStyle } from 'react-native/Libraries/StyleSheet/StyleSheetValidation';
+=======
+//import { validateStyle } from 'react-native/Libraries/StyleSheet/StyleSheet/StyleSheetValidation';
+>>>>>>> Stashed changes
 import User from './user'
 // import * as Crypto from 'expo-crypto';
 
