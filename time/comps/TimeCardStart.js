@@ -16,8 +16,7 @@
 import React from 'react';
 import {Color} from './Palette.js';
 
-import {Modal, Text, TextInput, View,StyleSheet, TouchableOpacity, Image} from 'react-native'
-import {Picker} from '@react-native-picker/picker'
+import { Picker, Modal, Text, TextInput, View, StyleSheet, TouchableOpacity, Image} from 'react-native'
 import TimeUtil from './TimeUtil.js';
 
 
