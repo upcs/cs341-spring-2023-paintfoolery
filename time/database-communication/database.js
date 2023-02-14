@@ -1,6 +1,7 @@
 import * as firebase from 'firebase'
 import 'firebase/firestore' 
 //import { validateStyle } from 'react-native/Libraries/StyleSheet/StyleSheetValidation';
+
 import User from './user'
 // import * as Crypto from 'expo-crypto';
 
