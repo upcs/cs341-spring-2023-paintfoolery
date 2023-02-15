@@ -15,11 +15,7 @@
   },
   "dependencies": {
     "@react-native-community/datetimepicker": "6.5.2",
-<<<<<<< Updated upstream
-    "@react-native-picker/picker": "2.4.8",
-=======
     "@react-native-picker/picker": "^2.4.8",
->>>>>>> Stashed changes
     "@react-navigation/material-top-tabs": "^6.1.1",
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.5.2",
