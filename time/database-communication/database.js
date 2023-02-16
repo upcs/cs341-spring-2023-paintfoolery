@@ -1,19 +1,19 @@
 import * as firebase from 'firebase'
-import 'firebase/firestore' 
-import { validateStyle } from 'react-native/Libraries/StyleSheet/StyleSheetValidation';
+import 'firebase/firestore'
+//import { validateStyle } from 'react-native/Libraries/StyleSheet/StyleSheetValidation';
 import User from './user'
 // import * as Crypto from 'expo-crypto';
 
 /**
  * Database class
- * 
- * Holds all methods for communication with database. 
- * 
+ *
+ * Holds all methods for communication with database.
+ *
  * To use, instantiate database object and call functions to read/write data
- * 
+ *
  * @author Jude Gabriel
  * @author Tony Hayden
- * @author Caden Deutscher 
+ * @author Caden Deutscher
  */
 class Database {
 
@@ -24,27 +24,27 @@ class Database {
         const firebaseConfig = {
 
             apiKey: "AIzaSyBQYb6hi0bNHIrHkGL2mdKFL1lnhMFwXeU",
-          
+
             authDomain: "paint-46970.firebaseapp.com",
-          
+
             databaseURL: "https://paint-46970-default-rtdb.firebaseio.com",
-          
+
             projectId: "paint-46970",
-          
+
             storageBucket: "paint-46970.appspot.com",
-          
+
             messagingSenderId: "54402484337",
-          
+
             appId: "1:54402484337:web:4b9d1cb00e07cd578df3d0",
-          
+
             measurementId: "G-Y9P77GNJTH"
-          
+
           };
 
         if(firebase.apps.length == 0){
-            firebase.initializeApp(firebaseConfig);  
+            firebase.initializeApp(firebaseConfig);
           }
-        
+
         this.db = firebase.firestore();
         this.userList = [];
     }
@@ -55,7 +55,7 @@ class Database {
 
     /**
      * Gets all accounts
-     * 
+     *
      * Status: Done
      * Testing: Not Done
      */
@@ -78,10 +78,10 @@ class Database {
 
     /**
      * Update: March 27, 2022
-     * 
+     *
      * Added proper hashing of the password and check with the database.
      * Current not using so we don't need to remember our passwords
-     * 
+     *
      */
     async getSignIn(email, password){
         var id = '';
@@ -126,10 +126,10 @@ class Database {
     }
 
     /**
-     * 
+     *
      * Get the users name
-     * 
-     * @author gabes 
+     *
+     * @author gabes
      */
     async getUsersInfo(id){
         if(id == '' || id == null){
@@ -184,19 +184,19 @@ class Database {
         }
     }
     catch{
-       
+
         await this.db.collection("accounts").doc(id).add({
             myJobs: jid
         });
     }
-        
+
     }
 
-    
+
 
     /**
      * Sets users firstname
-     * 
+     *
      * Status: Needs to test more edge cases
      * Testing: Needed
      */
@@ -208,10 +208,10 @@ class Database {
 
     /**
      * Sets users lastname
-     * 
+     *
      * Status: Needs to test more edge cases
      * Testing: Needed
-     * 
+     *
      * @author Jude Gabriel
      */
     async setuserLast(id, last){
@@ -223,7 +223,7 @@ class Database {
 
     /**
      * Set a new password for the user
-     * 
+     *
      * @author gabes
      */
     async setPassword(pass, id){
@@ -239,11 +239,11 @@ class Database {
 
     /**
      * Creates a new user account
-     * 
+     *
      * Status: Needs more edge cases
-     * 
+     *
      * @author Jude Gabriel
-     * 
+     *
      * Update: March 27, 2022
      * Author: Tony Hayden
      * Hashes user password with SHA512 on account creation
@@ -251,7 +251,7 @@ class Database {
      async createUserAccount(first, last, email, pass, admin){
         email = email.toLowerCase();
 
-        
+
 
         if((!first) || (!last) || (!email) || (!pass)){
             console.log("null parameter");
@@ -293,13 +293,13 @@ class Database {
 
 
     /****** DELETE ACCOUNT *******/
-    
+
     /**
      * Deletes a users account
-     * 
+     *
      * Status: Need to test id edge cases
      *          Otherwise done
-     * 
+     *
      * @author Jude Gabriel
      */
     async deleteUserAccount(id){
@@ -313,11 +313,11 @@ class Database {
 
     /**
      * Clock in
-     * 
+     *
      * Creates a new punch for the user in the database
-     * 
+     *
      * Status: Done
-     * 
+     *
      * @author Tony Hayden
      */
     async punchIn(id, jobName){
@@ -332,15 +332,15 @@ class Database {
         const timeIn = Date.now();
         //Create new punch for the user
         await this.db.collection("accounts").doc(id).collection("punch").add({
-            clockedIn: clocked, 
-            
+            clockedIn: clocked,
+
             timeIn,
             timeOut: null,
 
-            year: year, 
-            month: month, 
-            day: day, 
-            clockInHour: hour, 
+            year: year,
+            month: month,
+            day: day,
+            clockInHour: hour,
             clockInMinute: minute,
             clockOutHour: null,
             clockOutMinute: null,
@@ -353,11 +353,11 @@ class Database {
     /**
      * Clock out
      * Updates the hours tab for the employee as well as the punches
-     * 
+     *
      * Status: Not properly updating clock out hour/minute
-     * 
+     *
      * @author Tony Hayden
-     * 
+     *
      * Update: 3/19/22
      * Justin Lee
      * Added simplified time handling
@@ -380,23 +380,23 @@ class Database {
                 if(data.clockedIn == true ){
                     subCollectionID = doc.id;
                     duration = timeOut - data.timeIn;
-                    
+
                     totalTimeInMinutes = (((hour - data.clockInHour) * 60) + (minute - data.clockInMinute));
-                    
+
                 }
             });
         });
 
         // Function to update the clockIn status, as well as log the clock out time determined by the hour and minute above
         await this.db.collection("accounts").doc(id).collection("punch").doc(subCollectionID).update({
-            clockedIn: false, 
+            clockedIn: false,
             timeOut,
             duration,
 
-            clockOutHour: hour, 
+            clockOutHour: hour,
             clockOutMinute: minute,
-            totalPunchTimeInMinutes: totalTimeInMinutes //duration / (1000 * 60),            
-        });   
+            totalPunchTimeInMinutes: totalTimeInMinutes //duration / (1000 * 60),
+        });
     }
     /*
     @author Caden Deutscher
@@ -425,7 +425,7 @@ class Database {
             // Reduce to accumulate time over all elements of array
             let sum = 0;
             querySnapshot.forEach((doc) => {
-            
+
                 // Get data
                 const data = doc.data();
                 // If our shift began before midnight,
@@ -441,21 +441,21 @@ class Database {
         }, () => {
             console.log("FAILURE");
         });
-        
-                
+
+
     }
 
      /*
-     * @author Caden 
+     * @author Caden
      * @date 3/14/2022
-     * 
+     *
      * Get daily time
      * STATUS: DONE
-     * 
+     *
      * Update: 3/16/22
      * Tony Hayden
      * Changed hour update calculation to use correctly named collection fields for the punches
-     * 
+     *
      * Update: 3/19/2022
      * Justin Lee
      * Added modified time handling
@@ -463,8 +463,8 @@ class Database {
 
     async getDailyTime(id){
 
-        
-        //get current date 
+
+        //get current date
        /*
         let today = new Date();
         today.getDay()
@@ -479,18 +479,18 @@ class Database {
             });
           })
          return hours; */
-        
+
         const midnight = new Date().setHours(0, 0, 0, 0);
-        //console.log("MDNGHT\t", midnight); 
+        //console.log("MDNGHT\t", midnight);
         let valMs;
         await this.getDurationWorkedSinceTime(id, midnight).then(value => {
             valMs = value;
-        }); 
+        });
           //console.log("Value: ", val);
         return valMs;// valMs//; / (1000 * 60 * 60);
     }
 
-    
+
     /*
     @author Cadennpm
     @date 3/14/2022
@@ -498,7 +498,7 @@ class Database {
     @return returns 0 - Sunday, 1 - Monday, 2 - Tuesday, 3 - Wednesday... 6 - Saturday
     */
     getDayOfWeek(day, month, year){
-       
+
     }
 
     /**
@@ -506,9 +506,9 @@ class Database {
      * @date 3/14/2022
      * @param id of employee getting hours for
      * @return weekly hours
-     * 
+     *
      * Get weekly time
-     * 
+     *
      * Update: 3/16/2022
      * Tony Hayden
      * Adjusted time calculation to utilize the correct field names from the database
@@ -517,7 +517,7 @@ class Database {
        /*
         //get the day of the week through zellers rule
         ///
-         //get current date 
+         //get current date
          var today = new Date();
          var hours = 0;
          var start = 0;
@@ -565,12 +565,12 @@ class Database {
                 start = today.getDate() - 4;
                 end = start + 6;
                 break;
-            case 6: 
+            case 6:
                 start = today.getDate() - 5;
                 end = start + 6;
                 break;
-                
-       
+
+
        //
        //Return the time worked through out the week
        //
@@ -586,35 +586,35 @@ class Database {
         start++;
       }
       */
-        
+
 
        // sunday is (current day of the week) ago from today
       /* const t = new Date();
-       
-  
+
+
        let valMs;
        await this.getDurationWorkedSinceTime(id, sunday).then(value => {
            valMs = value;
-       }); 
+       });
        console.log("VALMS", valMs);
          //console.log("Value: ", val);
        return valMs;// valMs//; / (1000 * 60 * 60);
       */
        let offset = new Date().getTime() * 24 * 60 * 60 * 1000;
        const midnight = (new Date().setHours(0, 0, 0, 0)) - offset;
-       
-      // console.log("MDNGHT\t", midnight); 
+
+      // console.log("MDNGHT\t", midnight);
        let valMs;
        await this.getDurationWorkedSinceTime(id, midnight).then(value => {
            valMs = value;
-       }); 
+       });
          //console.log("Value: ", val);
        return valMs;// valMs//; / (1000 * 60 * 60);
     }
 
     /**
      * Get time from a certain day until present
-     * 
+     *
      * @author gabes
      */
     async getTimeFrom(id, day, month, year){
@@ -659,7 +659,7 @@ class Database {
 
     /**
      * Get time from first day until specified day
-     * 
+     *
      * @author gabes
      */
     async getTimeTo(id, day, month, year){
@@ -704,7 +704,7 @@ class Database {
 
     /**
      * Get time over a specified time range
-     * 
+     *
      * @author gabes
      */
     async getTimeRanged(id, fromDay, fromMonth, fromYear, toDay, toMonth, toYear){
@@ -731,7 +731,7 @@ class Database {
 
             //Filter punches with invalid dates
             for(var i = 0; i < postData.length; i++){
-                
+
                 //Lies between the two years
                 if((postData[i].year < toYear) && (postData[i]) > fromYear){
                     filteredData.push(postData[i]);
@@ -793,7 +793,7 @@ class Database {
 
     /**
      * Get all of an employees time
-     * 
+     *
      * @author gabes
      */
     async getAllTime(id){
@@ -812,7 +812,7 @@ class Database {
     }
     /*
     This method returns the total time that an employee worked
-    @param 
+    @param
     id - Employee id,
     fFrom - filtered From? (true or false)
     fTo - filtered To? (true or false)
@@ -837,14 +837,14 @@ class Database {
                     }
                     //add time only if it is in front of the from dates
                     else if(fFrom && !fTo){
-                
+
                         if(doc.data().year < fYear || (doc.data().year == fYear && doc.data().month < fMonth) || (doc.data().year == fYear && doc.data().month == fMonth && fYear && doc.data().day < fDay)){
 
                         }
                         else{
                             time += parseInt(doc.data().totalPunchTimeInMinutes);
                         }
-                    
+
 
                     }
                     //Add time only if it is before the to dates
@@ -870,9 +870,9 @@ class Database {
                         }
                     }
             }
-         });   
+         });
     })
-  
+
     return time;
     }
     /*
@@ -908,7 +908,7 @@ class Database {
 
        for (const documentSnapshot of querySnapshot.docs) {
         jobids.push(documentSnapshot.id);
-       
+
     }
     for(const jobs of jobids){
        const emp =  await this.getJobEmployeesID(jobs);
@@ -918,21 +918,21 @@ class Database {
                 }
             }
     }
-    
+
     return matches;
     }
 
 
-      
+
 
     /****** JOB GETTERS *******/
 
     /**
-     * Get all jobs 
-     * 
+     * Get all jobs
+     *
      * Status: Needs to test more edge cases
      * Testing: Needed
-     * 
+     *
      * @author Jude Gabriel
      */
     async getAllJobs(){
@@ -1010,7 +1010,7 @@ class Database {
     }
     /**
      * Get a list of all employees not on the job
-     * 
+     *
      * Status: Done
      * Testing: Needed
      */
@@ -1020,12 +1020,12 @@ class Database {
         }
 
         return allEmp;
-        
+
     }
 
     /**
      * Get a list of ID's for employees on a current job
-     * 
+     *
      * @author Jude Gabriel
      */
     async getJobEmployeesID(id){
@@ -1041,7 +1041,7 @@ class Database {
 
     /**
      * Get data for all employees in a list
-     * 
+     *
      * @author Jude Gabriel
      */
     async getJobEmployeeData(employeeID){
@@ -1060,10 +1060,10 @@ class Database {
 
     /**
      * Set job address
-     * 
+     *
      * Status: Needs to test more edge cases
      * Testing: Needed
-     * 
+     *
      * @author Jude Gabriel
      */
     async setJobAddress(id, addy){
@@ -1074,10 +1074,10 @@ class Database {
 
     /**
      * Set job name
-     * 
+     *
      * Status: Needs to test more edge cases
      * Testing: Needed
-     * 
+     *
      * @author Jude Gabriel
      */
     async setJobName(id, jobname){
@@ -1088,10 +1088,10 @@ class Database {
 
        /**
      * Set job notes
-     * 
+     *
      * Status: Needs to test more edge cases
      * Testing: Needed
-     * 
+     *
      * @author Caden Deutscher
      */
         async setJobNotes(id, jobnotes){
@@ -1112,13 +1112,13 @@ class Database {
                     await this.db.collection("jobs").doc(id).update({notes: jnote});
                 }
             }
-           
+
         }
-    
+
 
     /**
      * Set job phase
-     * 
+     *
      * @author gabes
      */
     async setJobPhase(id, phase){
@@ -1129,21 +1129,21 @@ class Database {
 
     /**
      * Adds an employee to a job (now accounts for priority)
-     * 
+     *
      * @author gabes
      */
     async addEmployeeToJobPriority(jobId, employee){
         var employeeId = employee.id
         await this.getAllPriority(employeeId).then((res, ref) => {
             var priority = this.getHighestPriority(res);
-            this.addEmployeeToJob(jobId, employeeId, priority); 
-        })   
+            this.addEmployeeToJob(jobId, employeeId, priority);
+        })
     }
 
 
      /**
      * Get the priorites of an employee on a job
-     * 
+     *
      * @author Caden
      * @author gabes
      */
@@ -1154,9 +1154,9 @@ class Database {
         //Get a list of all jobs
         const querySnapshot =  await this.db.collection("jobs").get();
         for (const documentSnapshot of querySnapshot.docs) {
-            jobids.push(documentSnapshot.id); 
+            jobids.push(documentSnapshot.id);
         }
-    
+
         //For each job find if an employee matches the id, push the priority
         for(const jobs of jobids){
            const emp =  await this.getJobEmployeesID(jobs);
@@ -1172,16 +1172,16 @@ class Database {
 
     /**
      * Get the highest priority
-     * 
+     *
      * @author gabes
      */
      getHighestPriority(priorityList){
-        //Return 0 if employee has no priority 
+        //Return 0 if employee has no priority
         if(priorityList == undefined){
             return 0;
-        } 
+        }
 
-        //Find the highest priority and return one above it 
+        //Find the highest priority and return one above it
         else{
             var maxPriority = 0;
             for(var i = 0; i < priorityList.length; i++){
@@ -1196,10 +1196,10 @@ class Database {
 
     /**
      * Add employee to job
-     * 
+     *
      * Status: Done
      * Testing: Needed
-     * 
+     *
      * @author Jude Gabriel
      */
     async addEmployeeToJob(jobId, employeeToAdd, priority){
@@ -1211,8 +1211,8 @@ class Database {
 
     /**
      * Sorts a list of jobs by priority
-     * 
-     * @author gabes 
+     *
+     * @author gabes
      */
    async sortJobsByPriority(jobsList, employeeID){
         var priorityArray = [];
@@ -1244,29 +1244,29 @@ class Database {
 
     /**
      * Helper function to sort jobs by priority
-     * 
+     *
      * Source: https://medium.com/@asadise/sorting-a-json-array-according-one-property-in-javascript-18b1d22cd9e9
-     * 
+     *
      * @author gabes
      */
-    sortByProperty(property){  
-        return function(a,b){  
-           if(a[property] > b[property])  
-              return 1;  
-           else if(a[property] < b[property])  
-              return -1;  
-       
-           return 0;  
-        }  
+    sortByProperty(property){
+        return function(a,b){
+           if(a[property] > b[property])
+              return 1;
+           else if(a[property] < b[property])
+              return -1;
+
+           return 0;
+        }
      }
 
 
     /**
      * Remove employee from job
-     * 
+     *
      * Status: Done
      * Testing: Needed
-     * 
+     *
      * @author Jude Gabriel
      */
     async removeEmployeeFromJob(jobID, empID){
@@ -1277,25 +1277,25 @@ class Database {
     }
 
     /****** CREATE JOB *******/
-    
+
     /**
      * Creates a job
      */
     createJob(add, jname, jnotes){
           //Trim values
-        
-        
-         
+
+
+
           if(!(jnotes) || (jnotes != " ") || (jnotes == "")){
             jnotes = "No notes";
           }
           else{
             jnotes.trim();
-           
+
           }
           //Phase will be 1 to start
           let phs = 1;
-  
+
         //Error check null parameters
           if((!add) || (!jname)){
               console.log("null parameter (name or address)");
@@ -1311,7 +1311,7 @@ class Database {
           }
           add.trim();
           jname.trim();
-  
+
           //Submit to database
           this.db.collection("jobs").add({
               address: add,
@@ -1335,12 +1335,12 @@ class Database {
 
     /**
      * Turns month string into numerical month value
-     * 
+     *
      * @author gabes
      */
     getMonth(month){
         switch(month){
-            case 'Jan': 
+            case 'Jan':
                 return 1;
             case 'Feb':
                 return 2
