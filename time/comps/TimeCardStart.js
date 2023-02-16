@@ -16,12 +16,13 @@
 import React from 'react';
 import {Color} from './Palette.js';
 
-import { Picker, Modal, Text, TextInput, View, StyleSheet, TouchableOpacity, Image} from 'react-native'
+import { Modal, Text, TextInput, View, StyleSheet, TouchableOpacity, Image } from 'react-native'
+import { Picker } from '@react-native-picker/picker';
 import TimeUtil from './TimeUtil.js';
 
 
 import Database from '../database-communication/database.js';
-import User from '../database-communication/user.js'
+import User from '../database-communication/user.js';
 
 /* Global Variables for time tracking */
 var isPressed;

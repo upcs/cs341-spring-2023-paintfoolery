@@ -6,7 +6,8 @@ const Color = {
     BUTTON: "#eee",
     BUTTON_BORDER: "#999",
     BUTTON_SELECTED: "#ccc",
-    MAROON: '#a70202'
+    MAROON: '#a70202',
+    PLACEHOLDER_TEXT: 'gray',
 }
 
 const style = StyleSheet.create({
@@ -65,6 +66,7 @@ const style = StyleSheet.create({
         fontWeight: "bold",
         lineHeight: 50,
     },
+    
 })
 
 
