@@ -66,6 +66,7 @@ var endTime = 0;
             password: '',
             jobNames: [],
             selectedJobName: '',
+
         };
         this.timerOn = this.timerOn.bind(this);
         this.timerOff = this.timerOff.bind(this);
@@ -75,6 +76,7 @@ var endTime = 0;
         this.sortJobs = this.sortJobs.bind(this);
         this.updateJobList = this.updateJobList.bind(this);
         this.data = new Database(); 
+        this.checkClockIn()
 
     };
 
@@ -82,7 +84,17 @@ var endTime = 0;
     componentDidMount = () => {
         this.updateJobList();
     }
-
+    /**
+     * Checks the state of the users time card, if they clocked in then
+     * closed the app, when they reopen it should display clock out
+     * 
+     * @author Austen Furutani
+     */
+    async checkClockIn(){
+        let temp = await this.data.isClockedIn(User.getId());
+        this.state.isTimerOn = temp[0].clockedIn;
+        console.log(this.state.isTimerOn);
+    }
     
     /**
      * Updates the picker list
@@ -193,8 +205,9 @@ var endTime = 0;
             isTimerOn: false,
             timerUpdater: null,
         });
-
+        
        await this.data.punchOut(User.getId());
+
        this.handleClockOut();
     }   
 
@@ -203,7 +216,7 @@ var endTime = 0;
      * 
      * Called when the user presses 'Start" 
      */
-    timerOn(){
+    async timerOn(){
         this.setState({
             isTimerOn: true,
             lastTimerIn: Date.now(),
@@ -220,8 +233,7 @@ var endTime = 0;
             }, 1000)
 
         });
-
-        this.data.punchIn(User.getId(), this.state.selectedJobName);
+        await this.data.punchIn(User.getId(), this.state.selectedJobName);
     };
 
 
