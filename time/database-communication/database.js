@@ -1,5 +1,5 @@
-import 'firebase/firestore'
-//commented out fer' now
+import * as firebase from 'firebase'
+import 'firebase/firestore' 
 //import { validateStyle } from 'react-native/Libraries/StyleSheet/StyleSheetValidation';
 
 import User from './user'
