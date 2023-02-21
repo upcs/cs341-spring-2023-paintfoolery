@@ -369,7 +369,7 @@ class Database {
         let hour = new Date().getHours();
         let minute = new Date().getMinutes();
 
-        var subCollectionID = '';
+        var subCollectionID = [];
         var totalTimeInMinutes = 0;
 
         const timeOut = Date.now();
@@ -379,7 +379,7 @@ class Database {
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
                 if(data.clockedIn == true ){
-                    subCollectionID = doc.id;
+                    subCollectionID.push(doc.id);
                     duration = timeOut - data.timeIn;
                     
                     totalTimeInMinutes = (((hour - data.clockInHour) * 60) + (minute - data.clockInMinute));
@@ -389,16 +389,70 @@ class Database {
         });
 
         // Function to update the clockIn status, as well as log the clock out time determined by the hour and minute above
-        await this.db.collection("accounts").doc(id).collection("punch").doc(subCollectionID).update({
-            clockedIn: false, 
-            timeOut,
-            duration,
-
-            clockOutHour: hour, 
-            clockOutMinute: minute,
-            totalPunchTimeInMinutes: totalTimeInMinutes //duration / (1000 * 60),            
-        });   
+        subCollectionID.forEach(collID => {
+            this.db.collection("accounts").doc(id).collection("punch").doc(collID).update({
+                clockedIn: false, 
+                timeOut,
+                duration,
+    
+                clockOutHour: hour, 
+                clockOutMinute: minute,
+                totalPunchTimeInMinutes: totalTimeInMinutes //duration / (1000 * 60),            
+            });    
+        });
     }
+    /*
+    @author Austen Furutani
+    @date: 2/20/203
+    @params: id
+    @Return: If user is clocked along with timeIn/out
+    @Result: Updates Punch - totalTimeInMinutes
+    */
+    async isClockedIn(id){
+        let month = ''
+        let day = ''
+        let infoList = []
+        await this.db.collection("accounts").doc(id).collection("punch")
+        .orderBy("timeIn", "desc").get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+
+                if (infoList.length == 0){
+                    month = data.month;
+                    day = data.day;
+                }
+                if((data.month == month && day == data.day)){
+                    var clockInfo = { 
+                        clockedIn:  data.clockedIn, 
+                        hourIn :  data.clockInHour, 
+                        minIn:  data.clockInMinute,
+                        hourOut: data.clockOutHour,
+                        minOut: data.clockOutMinute,
+                        month: data.month,
+                        day: data.day,
+                        year: data.year
+                    };
+                    infoList.push(clockInfo);
+                }
+            });
+        });
+        // console.log(infoList);
+        if (infoList.length == 0){
+            var clockInfo = { 
+                clockedIn:  false, 
+                hourIn :  null, 
+                minIn:  null,
+                hourOut: null,
+                minOut: null,
+                month: null,
+                day: null,
+                year: null
+            };
+            infoList.push(clockInfo);
+        }
+        return infoList;
+    }
+
     /*
     @author Caden Deutscher
     @date: 4/7/2022
