@@ -66,7 +66,7 @@ var endTime = 0;
             password: '',
             jobNames: [],
             selectedJobName: '',
-
+            
         };
         this.timerOn = this.timerOn.bind(this);
         this.timerOff = this.timerOff.bind(this);
@@ -247,7 +247,7 @@ var endTime = 0;
           this.timerOff();
             
         } else {
-            this.timerOn();
+          this.timerOn();
         }
     };
 
@@ -308,10 +308,11 @@ var endTime = 0;
                     </View>
                 </View >
 
-
+                {/* TODO: disable when clocked in */}
                 {/* DROPDOWN LIST TO CHOOSE A JOB */}
                 <View style={styles.picker}>
                     <Picker
+                    enabled={!isTimerOn}
                     style={{height: 0, width: 210}}
                     selectedValue={this.state.selectedJobName}
                     onValueChange={(itemLabel, itemValue) => {
