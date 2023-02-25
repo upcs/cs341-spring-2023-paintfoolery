@@ -283,6 +283,7 @@ var endTime = 0;
         const style = isTimerOn ? styles.stop : styles.start
         const text = isTimerOn ? "Clock-Out" : "Clock-In";
 
+        
         const timeString = TimeUtil.convertMsToReadable(todayTime * 1000);
         let currentJob = "java";
         const { isModalVisible } = this.state;

@@ -1,8 +1,11 @@
 {
   "ExpandedNodes": [
     "",
-    "\\database-communication"
+    "\\assets",
+    "\\comps",
+    "\\database-communication",
+    "\\tests"
   ],
-  "SelectedNode": "\\App.js",
+  "SelectedNode": "\\tests\\EmployeeHoursGUI.test.js",
   "PreviewInSolutionExplorer": false
 }
