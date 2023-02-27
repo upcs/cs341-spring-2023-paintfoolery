@@ -391,6 +391,13 @@ class Database {
 
                     totalTimeInMinutes = (((hour - data.clockInHour) * 60) + (minute - data.clockInMinute));
 
+                    // correction for possible overnight jobs because time will appear negative
+                    if (day != data.day) {
+                        totalTimeInMinutes += 24 * 60;
+                    }
+
+                    // call for testing purposes
+                    console.log(totalTimeInMinutes);
                 }
             });
         });
