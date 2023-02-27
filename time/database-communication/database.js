@@ -362,10 +362,17 @@ class Database {
      * Update: 3/19/22
      * Justin Lee
      * Added simplified time handling
+     * 
+     * Update: 2/27/23
+     * Dylan Kramis
+     * Adjusted functionality for overnight jobs
      */
     async punchOut(id){
 
         // Grab the new date and time
+        let year = new Date().getFullYear();
+        let month = new Date().getMonth() + 1;
+        let day = new Date().getDate();
         let hour = new Date().getHours();
         let minute = new Date().getMinutes();
 
