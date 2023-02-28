@@ -243,12 +243,12 @@ var endTime = 0;
       * Starts or stopes a timer and updates the state
       */
      onPress = () => { 
-        if (this.state.isTimerOn) {
-          this.timerOff();
+         if (this.state.isTimerOn) {
+             this.timerOff();
             
-        } else {
-          this.timerOn();
-        }
+         } else {
+             this.timerOn();
+         }
     };
 
 
@@ -279,10 +279,15 @@ var endTime = 0;
      * @returns the timecard component 
      */
      render() {
-        const { currentDuration, isTimerOn, todayTime } = this.state;
-        const style = isTimerOn ? styles.stop : styles.start
-        const text = isTimerOn ? "Clock-Out" : "Clock-In";
+         const { currentDuration, isTimerOn, todayTime } = this.state;
+         const style = isTimerOn ? styles.stop : styles.start;
+         const text = isTimerOn ? "Clock-Out" : "Clock-In";
+         const pickerStyle = isTimerOn ? styles.disabled : styles.picker;
 
+
+
+         //test
+         console.log(isTimerOn + "\n");
         
         const timeString = TimeUtil.convertMsToReadable(todayTime * 1000);
         let currentJob = "java";
@@ -310,9 +315,9 @@ var endTime = 0;
 
                 {/* TODO: disable when clocked in */}
                 {/* DROPDOWN LIST TO CHOOSE A JOB */}
-                <View style={styles.picker}>
-                    <Picker
-                    enabled={!isTimerOn}
+                <View style={pickerStyle}>
+                    <Picker style="none"
+                    disabled={!isTimerOn}
                     style={{height: 0, width: 210}}
                     selectedValue={this.state.selectedJobName}
                     onValueChange={(itemLabel, itemValue) => {
@@ -504,6 +509,9 @@ var endTime = 0;
         height: '30%',
         marginTop: '-5%',
         marginBottom: '15%',
+     },
+     disabled: {// needs refining
+         display: 'none',
      },
      button: {
         width: '100%',
