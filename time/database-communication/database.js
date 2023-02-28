@@ -388,7 +388,7 @@ class Database {
                 if(data.clockedIn == true ){
                     subCollectionID.push(doc.id);
                     duration = timeOut - data.timeIn;
-
+                    
                     totalTimeInMinutes = (((hour - data.clockInHour) * 60) + (minute - data.clockInMinute));
 
                     // correction for possible overnight jobs because time will appear negative
@@ -396,8 +396,10 @@ class Database {
                         totalTimeInMinutes += 24 * 60;
                     }
 
-                    // call for testing purposes
-                    console.log(totalTimeInMinutes);
+                    // calls for testing purposes
+                    console.log("duration = " + duration);
+                    console.log("duration in minutes = " + totalTimeInMinutes);
+                    console.log("duration calculation test = " + (duration / (1000 * 60)));
                 }
             });
         });
