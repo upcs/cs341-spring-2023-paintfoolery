@@ -1,0 +1,32 @@
+{
+  "emulators": {
+    "auth": {
+      "port": 3000
+    },
+    "functions": {
+      "port": 5001
+    },
+    "firestore": {
+      "port": 3002
+    },
+    "database": {
+      "port": 3001
+    },
+    "hosting": {
+      "port": 3000
+    },
+    "pubsub": {
+      "port": 3000
+    },
+    "storage": {
+      "port": 3000
+    },
+    "eventarc": {
+      "port": 3004
+    },
+    "ui": {
+      "enabled": true
+    },
+    "singleProjectMode": true
+  }
+}
