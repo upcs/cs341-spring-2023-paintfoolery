@@ -93,7 +93,7 @@ var endTime = 0;
     async checkClockIn(){
         let temp = await this.data.isClockedIn(User.getId());
         this.state.isTimerOn = temp[0].clockedIn;
-        console.log(this.state.isTimerOn);
+        //console.log(this.state.isTimerOn);
     }
     
     /**
@@ -286,8 +286,8 @@ var endTime = 0;
 
 
 
-         //test
-         console.log(isTimerOn + "\n");
+         // test call
+         //console.log(isTimerOn + "\n");
         
         const timeString = TimeUtil.convertMsToReadable(todayTime * 1000);
         let currentJob = "java";

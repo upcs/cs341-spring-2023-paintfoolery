@@ -397,9 +397,9 @@ class Database {
                     }
 
                     // calls for testing purposes
-                    console.log("duration = " + duration);
-                    console.log("duration in minutes = " + totalTimeInMinutes);
-                    console.log("duration calculation test = " + (duration / (1000 * 60)));
+                    //console.log("duration = " + duration);
+                    //console.log("duration in minutes = " + totalTimeInMinutes);
+                    //console.log("duration calculation test = " + (duration / (1000 * 60)));
                 }
             });
         });
