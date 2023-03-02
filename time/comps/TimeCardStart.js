@@ -66,8 +66,10 @@ var endTime = 0;
             password: '',
             jobNames: [],
             selectedJobName: '',
+
             todaysClockData: [],
             workingJobSite: ''
+
 
         };
         this.timerOn = this.timerOn.bind(this);
@@ -96,6 +98,7 @@ var endTime = 0;
         let data = await this.data.isClockedIn(User.getId());
         this.setState({isTimerOn: data[0].clockedIn, todaysClockData: data});
         this.setState({workingJobSite: this.state.selectedJobName});
+
     }
     
     /**
@@ -268,6 +271,7 @@ var endTime = 0;
       * 
       * Starts or stopes a timer and updates the state
       */
+
     onPress = () => { 
         if (this.state.isTimerOn) {
           this.timerOff();
@@ -276,6 +280,7 @@ var endTime = 0;
             this.timerOn();
         }
         this.checkClockIn();
+
     };
 
 
@@ -306,6 +311,7 @@ var endTime = 0;
      * @returns the timecard component 
      */
      render() {
+
         const { currentDuration, isTimerOn, todayTime, todaysClockData, workingJobSite } = this.state;
         const style = isTimerOn ? styles.stop : styles.start
         const text = isTimerOn ? "Clock-Out" : "Clock-In";
@@ -316,6 +322,11 @@ var endTime = 0;
 
 
 
+
+
+         // test call
+         //console.log(isTimerOn + "\n");
+        
         const timeString = TimeUtil.convertMsToReadable(todayTime * 1000);
         let currentJob = "java";
         const { isModalVisible } = this.state;
@@ -343,9 +354,11 @@ var endTime = 0;
                         </TouchableOpacity> 
                     </View>
                 </View >
+
                 {/* DROPDOWN LIST TO CHOOSE A JOB */}
-                <View style={styles.picker}>
-                    <Picker
+                <View style={pickerStyle}>
+                    <Picker style="none"
+                    disabled={!isTimerOn}
                     style={{height: 0, width: 210}}
                     selectedValue={this.state.selectedJobName}
                     onValueChange={(itemLabel, itemValue) => {
@@ -535,6 +548,9 @@ var endTime = 0;
         height: '30%',
         marginTop: '-5%',
         marginBottom: '15%',
+     },
+     disabled: {// needs refining
+         display: 'none',
      },
      button: {
         width: '100%',
