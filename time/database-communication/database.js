@@ -382,7 +382,7 @@ class Database {
         const timeOut = Date.now();
         let duration;
         // Function to grab the ID of the punch that is currently clocked in, and calculate punch time
-        await this.db.collection("accounts").doc(id).collection("punch").get().then((querySnapshot) => {
+        await this.db.collection("accounts").doc(id).collection("punch") .orderBy("timeIn", "desc").limit(6).get().then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
                 if(data.clockedIn == true ){
@@ -416,6 +416,7 @@ class Database {
                 totalPunchTimeInMinutes: totalTimeInMinutes //duration / (1000 * 60),            
             });    
         });
+        
     }
     /*
     @author Austen Furutani
@@ -429,7 +430,7 @@ class Database {
         let day = ''
         let infoList = []
         await this.db.collection("accounts").doc(id).collection("punch")
-        .orderBy("timeIn", "desc").get().then((querySnapshot) => {
+        .orderBy("timeIn", "desc").limit(3).get().then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
 
@@ -489,7 +490,6 @@ class Database {
 
     */
     async getDurationWorkedSinceTime(id, time) {
-
         return await this.db.collection("accounts").doc(id).collection("punch").where("timeOut", ">", time).get().then((querySnapshot) => {
             //return 10;
            // console.log("RESULT", querySnapshot);
