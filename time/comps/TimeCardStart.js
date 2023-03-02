@@ -66,8 +66,6 @@ var endTime = 0;
             password: '',
             jobNames: [],
             selectedJobName: '',
-            todaysClockData: [],
-            workingJobSite: ''
 
         };
         this.timerOn = this.timerOn.bind(this);
@@ -78,7 +76,7 @@ var endTime = 0;
         this.sortJobs = this.sortJobs.bind(this);
         this.updateJobList = this.updateJobList.bind(this);
         this.data = new Database(); 
-        this.checkClockIn();
+        this.checkClockIn()
 
     };
 
@@ -93,9 +91,9 @@ var endTime = 0;
      * @author Austen Furutani
      */
     async checkClockIn(){
-        let data = await this.data.isClockedIn(User.getId());
-        this.setState({isTimerOn: data[0].clockedIn, todaysClockData: data});
-        this.setState({workingJobSite: this.state.selectedJobName});
+        let temp = await this.data.isClockedIn(User.getId());
+        this.state.isTimerOn = temp[0].clockedIn;
+        console.log(this.state.isTimerOn);
     }
     
     /**
@@ -143,7 +141,12 @@ var endTime = 0;
         for(var i = 0; i < sorted.length; i++){
             for(var j = 0; j < unsorted.length; j++){
                 if(sorted[i] == unsorted[j].id){
-                    jobNames.push(<Picker.Item label={unsorted[j].name} value={unsorted[j].name}/>);
+                    //checks for initialized ID if not just prints out only the name
+                    if(unsorted[j].ID === undefined){
+                        jobNames.push(<Picker.Item label={unsorted[j].name} value={unsorted[j].name}/>);
+                    }else{
+                        jobNames.push(<Picker.Item label={unsorted[j].ID + ' ' + unsorted[j].name} value={unsorted[j].name}/>);
+                    }
                     selectJob.push(unsorted[i].name);
                 }
             }
@@ -201,7 +204,7 @@ var endTime = 0;
         currentDuration = 0;
         
         clearInterval(timerUpdater);
-        
+
         this.setState({ 
             lastTimerIn, todayTime, currentDuration, previousTodayDuration,
             isTimerOn: false,
@@ -209,9 +212,8 @@ var endTime = 0;
         });
         
        await this.data.punchOut(User.getId());
-       window.setInterval(() => {
+
        this.handleClockOut();
-       }, 1000);
     }   
 
     /**
@@ -220,7 +222,6 @@ var endTime = 0;
      * Called when the user presses 'Start" 
      */
     async timerOn(){
-        console.log(this.state.selectedJobName);
         this.setState({
             isTimerOn: true,
             lastTimerIn: Date.now(),
@@ -240,42 +241,19 @@ var endTime = 0;
         await this.data.punchIn(User.getId(), this.state.selectedJobName);
     };
 
-    createClockInText(data,workingJobSite){
-        var clockinText  = JSON.stringify(data);
-        try{
-            if(data.clockedIn){
-                if (data.minIn.toString().length == 1){
-                    data.minIn = 0+""+data.minIn;
-                }
-                clockinText = 'Clocked in: ' + data.hourIn + ':' + data.minIn + "\n at " + workingJobSite;
-            }
-            else{
-                if (data.minOut.toString().length == 1){
-                    data.minOut = 0+""+data.minOut;
-                }
-                clockinText = 'Clocked Out: ' + data.hourOut + ':' + data.minOut;
-            }
-            return clockinText;
-        }
-        catch (error){
-            clockinText = '';
-        }
-    }
-
 
      /**
       * Called when user presses either start or stop
       * 
       * Starts or stopes a timer and updates the state
       */
-    onPress = () => { 
+     onPress = () => { 
         if (this.state.isTimerOn) {
           this.timerOff();
             
         } else {
             this.timerOn();
         }
-        this.checkClockIn();
     };
 
 
@@ -306,15 +284,9 @@ var endTime = 0;
      * @returns the timecard component 
      */
      render() {
-        const { currentDuration, isTimerOn, todayTime, todaysClockData, workingJobSite } = this.state;
+        const { currentDuration, isTimerOn, todayTime } = this.state;
         const style = isTimerOn ? styles.stop : styles.start
         const text = isTimerOn ? "Clock-Out" : "Clock-In";
-        const clockedIn = todaysClockData;
-        const data = clockedIn[0];
-        var clockinText = this.createClockInText(data,workingJobSite);
-        // test = test.hourIn;
-
-
 
         const timeString = TimeUtil.convertMsToReadable(todayTime * 1000);
         let currentJob = "java";
@@ -325,10 +297,6 @@ var endTime = 0;
 
                 {/* COMPANY LOGO */}
                 <Image style={styles.logo} source={require('../assets/logo.jpg')} />
-                
-                <Text style={[styles.modalText, {fontSize:20}]}> 
-                {clockinText}
-                </Text>
 
                 {/* CLOCK IN BUTTON  */}
                 <View>
@@ -343,6 +311,8 @@ var endTime = 0;
                         </TouchableOpacity> 
                     </View>
                 </View >
+
+
                 {/* DROPDOWN LIST TO CHOOSE A JOB */}
                 <View style={styles.picker}>
                     <Picker
@@ -455,6 +425,8 @@ var endTime = 0;
                                 </View>
                             </View>
                    </Modal>
+
+
                  </View> 
              </View>  
              </View>   
@@ -482,7 +454,7 @@ var endTime = 0;
      logo: { 
          aspectRatio: 0.7, 
          resizeMode: 'contain',
-         marginTop: 80,
+         marginTop: 100,
      },
 
      bottomContainer: {
