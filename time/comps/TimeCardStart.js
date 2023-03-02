@@ -313,8 +313,9 @@ var endTime = 0;
      render() {
 
         const { currentDuration, isTimerOn, todayTime, todaysClockData, workingJobSite } = this.state;
-        const style = isTimerOn ? styles.stop : styles.start
+        const style = isTimerOn ? styles.stop : styles.start;
         const text = isTimerOn ? "Clock-Out" : "Clock-In";
+        const pickerStyle = isTimerOn ? styles.disabled : styles.picker;
         const clockedIn = todaysClockData;
         const data = clockedIn[0];
         var clockinText = this.createClockInText(data,workingJobSite);
